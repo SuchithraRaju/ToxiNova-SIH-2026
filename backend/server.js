@@ -39,7 +39,23 @@ const defaultDb = {
 
 function ensureDb() {
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, JSON.stringify(defaultDb, null, 2));
+  if (!fs.existsSync(DB_FILE)) {
+    fs.writeFileSync(DB_FILE, JSON.stringify(defaultDb, null, 2));
+    return;
+  }
+
+  let db;
+  try { db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); }
+  catch { db = {}; }
+
+  let changed = false;
+  for (const key of ['users', 'workers', 'calibration', 'records']) {
+    if (!Array.isArray(db[key]) || (key === 'users' && db[key].length === 0)) {
+      db[key] = defaultDb[key];
+      changed = true;
+    }
+  }
+  if (changed) writeDb(db);
 }
 function readDb() { ensureDb(); return JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); }
 function writeDb(db) { fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2)); }

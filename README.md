@@ -6,7 +6,7 @@ This version keeps the original ToxiNova standalone dashboard frontend and adds 
 Photo → RGB pixel extraction → CIELAB → ΔE → Backend API → Ridge Regression → cumulative H₂S dose (ppm-h) → 8-hour TWA → dashboard/history.
 
 ## Run backend
-Open VS Code terminal:
+Open the folder that contains this README (`ToxiNova_SIH_Working_AI`) in VS Code, then open a terminal:
 
 ```powershell
 cd backend
@@ -39,7 +39,7 @@ The included CSV is demonstration data, not experimentally validated H₂S calib
 
 
 ## Working AI/ML test
-1. Start `backend/server.py` and confirm `http://127.0.0.1:5000` is running.
+1. Start `backend/server.py` and confirm `http://127.0.0.1:5001` is running.
 2. Start the frontend with `python -m http.server 5500` from the `frontend` folder.
 3. Open `http://127.0.0.1:5500`.
 4. The AI card changes from `AI BACKEND CHECKING…` to `AI BACKEND CONNECTED` when the Python backend is reachable.

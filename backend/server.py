@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -7,6 +7,7 @@ from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.linear_model import Ridge
 
 import csv
+import math
 import os
 import numpy as np
 
@@ -24,7 +25,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
 )
@@ -185,6 +186,17 @@ def model_info():
 @app.post("/api/exposure")
 def exposure(data: Exposure):
 
+    if not all(math.isfinite(value) for value in (
+        data.hours,
+        data.temperature,
+        data.humidity,
+        data.deltaE
+    )):
+        raise HTTPException(
+            status_code=422,
+            detail="Exposure values must be finite numbers"
+        )
+
     # --------------------------------------------------------
     # Prepare input
     # --------------------------------------------------------
@@ -302,4 +314,8 @@ if __name__ == "__main__":
 
     import uvicorn
 
-  uvicorn.run(app, host='0.0.0.0', port=PORT)
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=PORT
+    )

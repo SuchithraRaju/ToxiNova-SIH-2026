@@ -1,16 +1,94 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "role": "admin",
+      "passwordHash": "$2a$10$tO2RI34wSrLk562I5OT9TOUC9bGgvU6nXiz934evCh6Qs7HlTy53a"
+    },
+    {
+      "id": 2,
+      "username": "supervisor",
+      "role": "supervisor",
+      "passwordHash": "$2a$10$wbdkBNgMh0ULMtZVMeWNB.PpXmeBbRyWZtmVZ3E9.kjuIxrHC.uXm"
+    },
+    {
+      "id": 3,
+      "username": "worker",
+      "role": "worker",
+      "passwordHash": "$2a$10$1szaPyKvTDuGhGGwMYW5tux8w2elKMX6fMJSgovF.Q/wyfSa3MSMa"
+    }
+  ],
   "workers": [
-    {"id":"W-128","name":"Worker 128","department":"Refinery","active":true},
-    {"id":"W-129","name":"Worker 129","department":"Refinery","active":true},
-    {"id":"W-130","name":"Worker 130","department":"Maintenance","active":true}
+    {
+      "id": "W-128",
+      "name": "Worker 128",
+      "department": "Refinery",
+      "active": true
+    },
+    {
+      "id": "W-129",
+      "name": "Worker 129",
+      "department": "Refinery",
+      "active": true
+    },
+    {
+      "id": "W-130",
+      "name": "Worker 130",
+      "department": "Maintenance",
+      "active": true
+    }
   ],
   "calibration": [
-    {"de":0,"dose":0},{"de":15,"dose":5},{"de":30,"dose":10},{"de":45,"dose":20},{"de":60,"dose":35},{"de":75,"dose":55}
+    {
+      "de": 0,
+      "dose": 0
+    },
+    {
+      "de": 15,
+      "dose": 5
+    },
+    {
+      "de": 30,
+      "dose": 10
+    },
+    {
+      "de": 45,
+      "dose": 20
+    },
+    {
+      "de": 60,
+      "dose": 35
+    },
+    {
+      "de": 75,
+      "dose": 55
+    }
   ],
   "records": [
-    {"id":"W-128","date":"07 Sep 2026 · 08:30","dose":12.6,"twa":1.58,"status":"Synced","source":"demo"},
-    {"id":"W-129","date":"07 Sep 2026 · 09:10","dose":24.8,"twa":3.10,"status":"Synced","source":"demo"},
-    {"id":"W-130","date":"07 Sep 2026 · 10:00","dose":31.2,"twa":3.90,"status":"Synced","source":"demo"}
+    {
+      "id": "W-128",
+      "date": "07 Sep 2026 · 08:30",
+      "dose": 12.6,
+      "twa": 1.58,
+      "status": "Synced",
+      "source": "demo"
+    },
+    {
+      "id": "W-129",
+      "date": "07 Sep 2026 · 09:10",
+      "dose": 24.8,
+      "twa": 3.1,
+      "status": "Synced",
+      "source": "demo"
+    },
+    {
+      "id": "W-130",
+      "date": "07 Sep 2026 · 10:00",
+      "dose": 31.2,
+      "twa": 3.9,
+      "status": "Synced",
+      "source": "demo"
+    }
   ]
 }
