@@ -1,0 +1,16 @@
+{
+  "users": [],
+  "workers": [
+    {"id":"W-128","name":"Worker 128","department":"Refinery","active":true},
+    {"id":"W-129","name":"Worker 129","department":"Refinery","active":true},
+    {"id":"W-130","name":"Worker 130","department":"Maintenance","active":true}
+  ],
+  "calibration": [
+    {"de":0,"dose":0},{"de":15,"dose":5},{"de":30,"dose":10},{"de":45,"dose":20},{"de":60,"dose":35},{"de":75,"dose":55}
+  ],
+  "records": [
+    {"id":"W-128","date":"07 Sep 2026 · 08:30","dose":12.6,"twa":1.58,"status":"Synced","source":"demo"},
+    {"id":"W-129","date":"07 Sep 2026 · 09:10","dose":24.8,"twa":3.10,"status":"Synced","source":"demo"},
+    {"id":"W-130","date":"07 Sep 2026 · 10:00","dose":31.2,"twa":3.90,"status":"Synced","source":"demo"}
+  ]
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ToxiNova | H₂S Exposure Dosimeter</title>
+<style>
+:root{--nav:#102d49;--nav2:#173e62;--bg:#f4f7fa;--card:#fff;--line:#dfe6ee;--text:#18324c;--muted:#6b7b8d;--green:#2d7952;--amber:#bd7a13;--red:#bd4545;--blue:#28679b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.app{display:flex;min-height:100vh}.sidebar{width:230px;background:linear-gradient(180deg,var(--nav),#0c2439);color:#fff;padding:25px 16px;position:fixed;inset:0 auto 0 0}.logo{font-size:25px;font-weight:800}.sub{font-size:11px;color:#b9c9d8;margin:4px 0 28px}.nav{padding:12px 13px;border-radius:9px;margin:5px 0;cursor:pointer;font-size:14px}.nav:hover,.nav.active{background:var(--nav2)}.nav small{display:block;color:#9db2c5;margin-top:2px}
+.main{margin-left:230px;width:calc(100% - 230px);padding:28px;max-width:1450px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}h1{font-size:25px;margin:0 0 4px}.muted{color:var(--muted);font-size:13px}.status{padding:8px 12px;border-radius:20px;background:#e9f7ee;border:1px solid #bce2ca;color:#277047;font-size:12px;font-weight:700}
+.section{display:none}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px;box-shadow:0 2px 10px rgba(20,45,70,.045);margin-bottom:16px}.card h2{font-size:17px;margin:0 0 12px}.kpi{font-size:26px;font-weight:800;margin:5px 0}.kpiLabel{font-size:11px;color:var(--muted)}
+.badge{display:inline-block;padding:5px 8px;border-radius:15px;font-size:11px;font-weight:700}.low{background:#eaf7ef;color:#267044}.moderate{background:#fff3dc;color:#9a640f}.high{background:#fdebea;color:#a13c3c}.info{background:#edf4fb;color:#2a628e}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #edf1f5;font-size:12px}th{color:#68788a;font-weight:700}.btn{border:0;border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}.primary{background:var(--nav2);color:#fff}.secondary{background:#eaf0f6;color:#294663}.green{background:var(--green);color:#fff}.danger{background:#f8e8e7;color:#9c3b39}
+.scanGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fieldGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:10px;color:#65758a;margin:0 0 5px;font-weight:700}.field input,.field select{width:100%;padding:9px;border:1px solid #cdd8e3;border-radius:7px;background:#fff}.file{padding:10px;border:1px solid #cdd8e3;border-radius:8px;width:100%;background:#fff}.preview{height:330px;border:1px dashed #cbd7e3;border-radius:10px;background:#f8fafc;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:10px}.preview img{max-width:100%;max-height:100%;object-fit:contain;display:none}.placeholder{color:#8a98a8;font-size:13px;text-align:center;padding:25px}.note{font-size:11px;color:#6b7785;background:#fff8df;border:1px solid #f0db91;padding:11px;border-radius:9px;line-height:1.45;margin-top:12px}
+.result{text-align:center;background:#f7fafc;border:1px solid #e0e8f0;border-radius:12px;padding:17px}.dose{font-size:36px;font-weight:850;margin:3px}.unit{font-size:11px;color:#68788b}.swatch{width:130px;height:68px;border:1px solid #c5d0dc;border-radius:8px;margin:12px auto;background:#edf1f5}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.metric{text-align:left;background:#fff;border:1px solid #e0e6ed;padding:9px;border-radius:8px}.metric span{font-size:10px;color:#718095}.metric b{display:block;font-size:13px;margin-top:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.progress{height:9px;background:#e3e9ef;border-radius:10px;overflow:hidden}.bar{height:100%;width:0;background:#2d7952;transition:.35s}.trend{height:180px;display:flex;align-items:end;gap:9px;padding:15px 5px 0}.barcol{flex:1;text-align:center;font-size:10px;color:#718095}.barcol i{display:block;background:#6d93b5;border-radius:5px 5px 0 0;min-height:5px;margin-bottom:5px}.small{font-size:11px;color:var(--muted)}
+.toast{position:fixed;right:24px;bottom:22px;background:#173e62;color:#fff;padding:11px 15px;border-radius:8px;font-size:12px;display:none;box-shadow:0 5px 20px #0002}.online{background:#e9f7ee;color:#277047}.offline{background:#fff3dc;color:#94610f}
+@media(max-width:1000px){.sidebar{width:190px}.main{margin-left:190px;width:calc(100% - 190px)}.grid{grid-template-columns:repeat(2,1fr)}.grid2,.scanGrid{grid-template-columns:1fr}}
+@media(max-width:650px){.sidebar{position:static;width:100%;min-height:auto}.app{display:block}.main{margin:0;width:100%;padding:15px}.nav{display:inline-block}.grid{grid-template-columns:1fr 1fr}.fieldGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">ToxiNova</div><div class="sub">H₂S Exposure Dosimeter</div>
+  <div class="nav active" data-tab="overview">▣ &nbsp;Overview</div>
+  <div class="nav" data-tab="scan">◉ &nbsp;Scanning Session</div>
+  <div class="nav" data-tab="history">◷ &nbsp;Exposure History</div>
+  <div class="nav" data-tab="hse">▤ &nbsp;HSE Dashboard</div>
+</aside>
+<main class="main">
+<header><div><h1>Passive H₂S Exposure Monitoring</h1><div class="muted">Smartphone-based quantitative reading • ToxiNova SIH prototype</div></div><div id="net" class="status offline">● Offline mode active</div></header>
+
+<section id="overview" class="section active">
+  <div class="grid">
+    <div class="card"><div class="kpi" id="kpiWorkers">12</div><div class="kpiLabel">WORKERS MONITORED</div></div>
+    <div class="card"><div class="kpi" id="kpiScans">28</div><div class="kpiLabel">SCANS TODAY</div></div>
+    <div class="card"><div class="kpi" id="kpiAvg">13.8</div><div class="kpiLabel">AVG SHIFT DOSE · ppm-h</div></div>
+    <div class="card"><div class="kpi" id="kpiPending">3</div><div class="kpiLabel">PENDING SYNC</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>System workflow</h2>
+      <table><tr><th>Stage</th><th>Prototype action</th></tr>
+      <tr><td>1. Wear</td><td>Passive colorimetric H₂S strip worn during shift</td></tr>
+      <tr><td>2. Exposure</td><td>H₂S causes progressive color response</td></tr>
+      <tr><td>3. Scan</td><td>Supervisor/worker photographs strip with smartphone</td></tr>
+      <tr><td>4. CV</td><td>OpenCV-style pixel extraction → CIELAB → ΔE</td></tr>
+      <tr><td>5. Quantify</td><td>Calibration curve converts color response to estimated ppm-hours</td></tr>
+      <tr><td>6. Store</td><td>Worker-wise result saved locally; sync when network returns</td></tr></table>
+    </div>
+    <div class="card"><h2>Latest exposure status</h2><div class="result"><div class="unit">CURRENT DEMO WORKER</div><div class="dose" id="overviewDose">18.4</div><div class="unit">ppm-hours</div><div style="margin:10px"><span class="badge moderate">Moderate demo exposure</span></div><div class="small">8-h TWA: <b id="overviewTwa">2.30 ppm</b></div></div><div class="note">This is a prototype reading. The color-to-dose calibration must be replaced by experimentally measured BiSNUT/H₂S calibration data before field use.</div></div>
+  </div>
+  <div class="card"><h2>Design principles</h2><div class="grid"><div><b>Passive</b><p class="small">No battery/electronics on the wristband.</p></div><div><b>Quantitative</b><p class="small">Color response is converted to cumulative ppm-hours.</p></div><div><b>Offline-first</b><p class="small">Results can be stored locally and synced later.</p></div><div><b>HSE-ready</b><p class="small">Worker-wise history supports centralized monitoring.</p></div></div></div>
+</section>
+
+<section id="scan" class="section">
+<div class="scanGrid">
+<div class="card">
+<h2>Scanning Session</h2>
+<div class="fieldGrid">
+<div class="field"><label>WORKER ID</label><input id="worker" value="W-102"></div>
+<div class="field"><label>SHIFT HOURS</label><input id="hours" type="number" value="8" min="1" max="24"></div>
+<div class="field"><label>TEMPERATURE (°C)</label><input id="temp" type="number" value="30"></div>
+<div class="field"><label>HUMIDITY (%)</label><input id="hum" type="number" value="65"></div>
+</div>
+<br><label class="small"><b>WRISTBAND PHOTOGRAPH</b></label>
+<input class="file" id="photo" type="file" accept="image/*">
+<div class="preview"><div class="placeholder" id="phText">Choose the wristband photo. The image will appear here.</div><img id="preview" alt="Wristband photograph"></div>
+<div class="actions"><button class="btn green" id="auto">Auto-detect sensing strip</button><button class="btn secondary" id="clear">Clear</button><button class="btn primary" id="analyze">Analyze exposure</button></div>
+<div id="selectionMsg" class="small" style="margin-top:8px">No strip detected yet.</div>
+<div class="note">Recommended capture: keep the sensing strip and reference patch visible, use even lighting, and avoid glare. The wristband remains passive; environmental correction should use locally recorded exposure-period conditions rather than assuming the phone itself measures humidity.</div>
+</div>
+
+<div class="card">
+<h2>Quantitative Reading</h2>
+<div class="result"><div class="unit">ESTIMATED CUMULATIVE H₂S EXPOSURE</div><div class="dose" id="dose">—</div><div class="unit">ppm-hours</div><div class="swatch" id="swatch"></div>
+<div class="metrics"><div class="metric"><span>MEAN RGB</span><b id="rgb">—</b></div><div class="metric"><span>CIELAB</span><b id="lab">—</b></div><div class="metric"><span>ΔE TO REFERENCE</span><b id="de">—</b></div><div class="metric"><span>8-H TWA</span><b id="twa">—</b></div></div></div>
+<h2 style="margin-top:16px">Calibration</h2>
+<div class="fieldGrid"><div class="field"><label>REFERENCE L*</label><input id="rL" value="92"></div><div class="field"><label>REFERENCE a*</label><input id="rA" value="-2"></div><div class="field"><label>REFERENCE b*</label><input id="rB" value="28"></div><div class="field"><label>CALIBRATION FACTOR</label><input id="factor" value="1" type="number" step="0.01"></div></div>
+<p class="small">Dose calculation uses piecewise linear interpolation of the calibration points below, multiplied by the environmental correction factor.</p>
+<table><tr><th>ΔE</th><th>Demo dose (ppm-h)</th></tr><tr><td>0</td><td>0</td></tr><tr><td>15</td><td>5</td></tr><tr><td>30</td><td>10</td></tr><tr><td>45</td><td>20</td></tr><tr><td>60</td><td>35</td></tr><tr><td>75</td><td>55</td></tr></table>
+</div>
+</div>
+</section>
+
+<section id="history" class="section">
+<div class="card"><h2>Offline Exposure History</h2><p class="muted">Worker-wise cumulative exposure records stored in this browser prototype.</p>
+<table id="historyTable"><tr><th>Worker</th><th>Date / Shift</th><th>Dose</th><th>8-h TWA</th><th>Status</th></tr>
+<tr><td>W-102</td><td>07 Sep 2026 · 09:00–17:00</td><td>18.4 ppm-h</td><td>2.30 ppm</td><td><span class="badge info">Pending sync</span></td></tr>
+<tr><td>W-118</td><td>07 Sep 2026 · 09:00–17:00</td><td>11.7 ppm-h</td><td>1.46 ppm</td><td><span class="badge info">Pending sync</span></td></tr>
+<tr><td>W-121</td><td>07 Sep 2026 · 09:00–17:00</td><td>7.9 ppm-h</td><td>0.99 ppm</td><td><span class="badge low">Synced</span></td></tr></table>
+<div class="actions"><button class="btn primary" id="sync">Simulate Network Sync</button><button class="btn secondary" id="clearHistory">Clear demo scans</button></div></div>
+<div class="card"><h2>Exposure trend</h2><div class="trend"><div class="barcol"><i style="height:45px"></i>1d</div><div class="barcol"><i style="height:75px"></i>2d</div><div class="barcol"><i style="height:58px"></i>3d</div><div class="barcol"><i style="height:105px"></i>4d</div><div class="barcol"><i style="height:80px"></i>5d</div><div class="barcol"><i style="height:125px"></i>6d</div><div class="barcol"><i style="height:90px"></i>7d</div></div><div class="small">Prototype trend view for 1–7 day monitoring. The same architecture can extend to 30-day trends.</div></div>
+</section>
+
+<section id="hse" class="section">
+<div class="grid"><div class="card"><div class="kpi" id="hseActive">12</div><div class="kpiLabel">ACTIVE WORKERS</div></div><div class="card"><div class="kpi" id="hseHigh">2</div><div class="kpiLabel">HIGH-PRIORITY RECORDS</div></div><div class="card"><div class="kpi" id="hsePending">3</div><div class="kpiLabel">PENDING SYNC</div></div><div class="card"><div class="kpi">8 h</div><div class="kpiLabel">TWA WINDOW</div></div></div>
+<div class="card"><h2>HSE Dashboard</h2><p class="muted">Supervisor view of worker-wise cumulative exposure and synchronization status.</p>
+<table id="hseTable"><tr><th>Worker ID</th><th>Shift Dose</th><th>8-h TWA</th><th>Risk status</th><th>Record</th></tr>
+<tr><td>W-102</td><td>18.4 ppm-h</td><td>2.30 ppm</td><td><span class="badge moderate">Moderate</span></td><td>Stored locally</td></tr>
+<tr><td>W-118</td><td>11.7 ppm-h</td><td>1.46 ppm</td><td><span class="badge moderate">Moderate</span></td><td>Stored locally</td></tr>
+<tr><td>W-121</td><td>7.9 ppm-h</td><td>0.99 ppm</td><td><span class="badge low">Low</span></td><td>Synced</td></tr>
+<tr><td>W-130</td><td>31.2 ppm-h</td><td>3.90 ppm</td><td><span class="badge high">High-priority review</span></td><td>Synced</td></tr></table>
+<div class="note">The dashboard is a prototype representation of the proposed online HSE management layer. The SIH concept specifies offline local storage with Firebase Cloud synchronization when connectivity is available. It is not connected to a live Firebase project in this standalone HTML.</div></div>
+<div class="card"><h2>Reporting flow</h2><div class="progress"><div class="bar" id="syncBar"></div></div><p class="small" id="syncText">3 records waiting for synchronization.</p><div class="actions"><button class="btn primary" id="hseSync">Sync pending records</button></div></div>
+</section>
+
+<div id="toast" class="toast"></div>
+</main></div>
+
+<script>
+let imgLoaded=false,sourceCanvas=null,selection=null,lastResult=null;
+const $=id=>document.getElementById(id), STORE='toxinova_h2s_records_v2';
+const DEMO=[{id:'W-128',date:'07 Sep 2026 · 08:30',dose:12.6,twa:1.58,status:'Synced'},{id:'W-129',date:'07 Sep 2026 · 09:10',dose:24.8,twa:3.10,status:'Synced'},{id:'W-130',date:'07 Sep 2026 · 10:00',dose:31.2,twa:3.90,status:'Synced'}];
+function getRecords(){try{let x=JSON.parse(localStorage.getItem(STORE));if(Array.isArray(x))return x}catch(e){} saveRecords(DEMO);return DEMO.slice()}
+function saveRecords(r){localStorage.setItem(STORE,JSON.stringify(r))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function renderAll(){const records=getRecords(),hist=$('historyTable');while(hist.rows.length>1)hist.deleteRow(1);records.slice().reverse().forEach(r=>{let row=hist.insertRow(-1),c=r.status==='Synced'?'low':'info';row.innerHTML=`<td>${esc(r.id)}</td><td>${esc(r.date)}</td><td>${Number(r.dose).toFixed(1)} ppm-h</td><td>${Number(r.twa).toFixed(2)} ppm</td><td><span class="badge ${c}">${esc(r.status)}</span></td>`});const pending=records.filter(r=>r.status==='Pending Sync').length;$('kpiScans').textContent=records.length;$('kpiPending').textContent=pending;$('hsePending').textContent=pending;if($('hseTable')){const h=$('hseTable');while(h.rows.length>1)h.deleteRow(1);records.slice().reverse().forEach(r=>{let row=h.insertRow(-1),level=r.twa>=4?'High-priority review':r.twa>=2?'Monitor':'Normal',lc=r.twa>=4?'high':r.twa>=2?'med':'low',sc=r.status==='Synced'?'low':'info';row.innerHTML=`<td>${esc(r.id)}</td><td>${Number(r.dose).toFixed(1)} ppm-h</td><td>${Number(r.twa).toFixed(2)} ppm</td><td><span class="badge ${lc}">${level}</span></td><td><span class="badge ${sc}">${esc(r.status)}</span></td>`})}$('syncText').textContent=pending?`${pending} record${pending>1?'s':''} waiting for synchronization.`:'All records synchronized.';$('syncBar').style.width=records.length?`${Math.round((records.length-pending)/records.length*100)}%`:'0%';if($('netText'))$('netText').textContent=navigator.onLine?'Online':'Offline';if($('netDot'))$('netDot').className=navigator.onLine?'dot online':'dot offline';if($('sync'))$('sync').textContent=navigator.onLine?'Sync now':'Waiting for connection'}
+function syncPending(){if(!navigator.onLine){renderAll();return false}let r=getRecords(),changed=false;r.forEach(x=>{if(x.status==='Pending Sync'){x.status='Synced';changed=true}});if(changed)saveRecords(r);renderAll();return changed}
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));n.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(n.dataset.tab).classList.add('active');renderAll()}));
+$('photo').addEventListener('change',()=>{const f=$('photo').files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$('preview').onload=()=>{imgLoaded=true;$('preview').style.display='block';$('phText').style.display='none';sourceCanvas=document.createElement('canvas');sourceCanvas.width=$('preview').naturalWidth;sourceCanvas.height=$('preview').naturalHeight;sourceCanvas.getContext('2d').drawImage($('preview'),0,0);selection=null;$('selectionMsg').textContent='Image loaded. Click Auto-detect sensing strip.';resetResult()};$('preview').src=rd.result};rd.readAsDataURL(f)});
+$('auto').onclick=autoDetect;$('analyze').onclick=analyze;$('clear').onclick=()=>{selection=null;resetResult();$('selectionMsg').textContent='Selection cleared.'};
+function autoDetect(){if(!imgLoaded){alert('Choose the wristband photo first.');return}const W=sourceCanvas.width,H=sourceCanvas.height,s=document.createElement('canvas'),scale=Math.min(1,700/W,500/H);s.width=Math.max(1,Math.round(W*scale));s.height=Math.max(1,Math.round(H*scale));const sc=s.getContext('2d',{willReadFrequently:true});sc.drawImage(sourceCanvas,0,0,s.width,s.height);const d=sc.getImageData(0,0,s.width,s.height).data;let minX=s.width,minY=s.height,maxX=-1,maxY=-1,count=0;for(let y=0;y<s.height;y+=2)for(let x=0;x<s.width;x+=2){let i=(y*s.width+x)*4,r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(r>75&&g>45&&r>=g*.82&&g>b*1.08&&mx-mn>18){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);count++}}if(count<25){alert('Automatic detection could not confidently find the colored strip.');return}const inv=1/scale,pad=8*inv;selection={x:Math.max(0,minX*inv-pad),y:Math.max(0,minY*inv-pad),w:Math.min(W,(maxX-minX)*inv+2*pad),h:Math.min(H,(maxY-minY)*inv+2*pad)};$('selectionMsg').textContent='✓ Sensing strip detected automatically. Ready to analyze.';analyze()}
+function analyze(){if(!imgLoaded){alert('Choose a wristband photo first.');return}if(!selection){alert('Click Auto-detect sensing strip first.');return}const c=sourceCanvas.getContext('2d',{willReadFrequently:true}),x=Math.max(0,Math.floor(selection.x)),y=Math.max(0,Math.floor(selection.y)),w=Math.min(sourceCanvas.width-x,Math.floor(selection.w)),h=Math.min(sourceCanvas.height-y,Math.floor(selection.h)),d=c.getImageData(x,y,w,h).data,p=[];for(let i=0;i<d.length;i+=4){let r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);p.push([r,g,b,mx,mn])}p.sort((a,b)=>(a[3]+a[4])-(b[3]+b[4]));let lo=Math.floor(p.length*.1),hi=Math.max(lo+1,Math.ceil(p.length*.9)),R=0,G=0,B=0,n=0;for(let i=lo;i<hi;i++){R+=p[i][0];G+=p[i][1];B+=p[i][2];n++}let rgb=[R/n,G/n,B/n],lab=rgbToLab(...rgb),ref=[+$('rL').value,+$('rA').value,+$('rB').value],de=deltaE(lab,ref),raw=mapDose(de),temp=+$('temp').value||30,hum=+$('hum').value||65,hours=+$('hours').value||8,env=1+(temp-30)*.004+(hum-65)*.001,dose=Math.max(0,raw*env*(+$('factor').value||1)),twa=dose/hours;lastResult={dose,twa,rgb,lab,de,worker:$('worker').value||'Unknown'};$('rgb').textContent=rgb.map(v=>Math.round(v)).join(', ');$('lab').textContent=lab.map(v=>v.toFixed(1)).join(', ');$('de').textContent=de.toFixed(1);$('dose').textContent=dose.toFixed(1);$('twa').textContent=twa.toFixed(2)+' ppm';$('swatch').style.background=`rgb(${rgb.map(v=>Math.round(v)).join(',')})`;$('overviewDose').textContent=dose.toFixed(1);$('overviewTwa').textContent=twa.toFixed(2)+' ppm';addRecord(lastResult);toast(navigator.onLine?'Exposure calculated and synchronized.':'Exposure calculated and stored locally. Pending sync until connection returns.')}
+function rgbToLab(R,G,B){let r=R/255,g=G/255,b=B/255;r=r<=.04045?r/12.92:Math.pow((r+.055)/1.055,2.4);g=g<=.04045?g/12.92:Math.pow((g+.055)/1.055,2.4);b=b<=.04045?b/12.92:Math.pow((b+.055)/1.055,2.4);let X=(r*.4124+g*.3576+b*.1805)/.95047,Y=r*.2126+g*.7152+b*.0722,Z=(r*.0193+g*.1192+b*.9505)/1.08883,f=t=>t>.008856?Math.cbrt(t):7.787*t+16/116;X=f(X);Y=f(Y);Z=f(Z);return[116*Y-16,500*(X-Y),200*(Y-Z)]}
+function deltaE(a,b){return Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2)}
+function mapDose(de){const p=[[0,0],[15,5],[30,10],[45,20],[60,35],[75,55]];if(de<=0)return 0;for(let i=1;i<p.length;i++)if(de<=p[i][0]){let[x1,y1]=p[i-1],[x2,y2]=p[i];return y1+(de-x1)*(y2-y1)/(x2-x1)}let[x1,y1]=p[p.length-2],[x2,y2]=p[p.length-1];return y2+(de-x2)*(y2-y1)/(x2-x1)}
+function resetResult(){['dose','rgb','lab','de','twa'].forEach(id=>$(id).textContent='—');$('swatch').style.background=''}
+function addRecord(r){let records=getRecords();records.push({id:r.worker,date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' · Current shift',dose:r.dose,twa:r.twa,status:navigator.onLine?'Synced':'Pending Sync'});saveRecords(records);renderAll()}
+function sync(){if(!navigator.onLine){toast('No network connection. Records remain stored locally.');renderAll();return}toast(syncPending()?'Pending records synchronized successfully.':'Everything is already synchronized.')}
+$('sync').onclick=sync;$('hseSync').onclick=sync;$('clearHistory').onclick=()=>{localStorage.removeItem(STORE);saveRecords([]);renderAll();toast('All prototype records cleared.')};window.addEventListener('online',()=>{toast('Network restored. Synchronizing pending records...');syncPending()});window.addEventListener('offline',()=>{renderAll();toast('Network lost. New scans will be stored locally.')});
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2500)}
+renderAll();if(navigator.onLine)syncPending();
+
+</script>
+</body>
+</html>
